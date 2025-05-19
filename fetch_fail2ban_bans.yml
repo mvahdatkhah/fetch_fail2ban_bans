@@ -13,5 +13,5 @@
     - ansible_sudo_pass: "{{ ansible_sudo_password }}"
 
   roles:
-    - docky
+    - fetch_fail2ban_bans
 ...
