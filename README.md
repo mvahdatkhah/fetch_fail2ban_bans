@@ -12,6 +12,8 @@ This Ansible playbook 📘 automates the task of extracting, counting, and savin
 │   └── main.yml
 ├── vars/
 │   └── main.yml
+├── handlers/
+│   └── main.yml
 └── reports/
     └── fail2ban-cdn/
 ```
