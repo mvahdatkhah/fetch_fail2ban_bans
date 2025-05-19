@@ -87,3 +87,8 @@ MIT License © 2025
 ## 🤝 Contributions
 
 PRs are welcome! If you have improvements, ideas, or bug fixes, feel free to open an issue or submit a pull request. 🚀
+
+---
+
+✨ Author
+Milad Vahdatkhah – DevOps & Automation Enthusiast 💻🛠️
