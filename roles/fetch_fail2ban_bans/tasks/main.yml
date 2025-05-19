@@ -1,0 +1,43 @@
+---
+- name: Count banned IPs in the given time range
+  shell: >
+    grep 'Ban' /var/log/fail2ban.log |
+    awk '$0 >= "{{ start_time }}" && $0 <= "{{ end_time }}"' |
+    tee /tmp/banned_list.txt |
+    wc -l
+  register: banned_ip_count
+
+- name: Show count
+  debug:
+    msg: "Number of banned IPs: {{ banned_ip_count.stdout }}"
+
+- name: Run command to fetch banned IPs from fail2ban log
+  shell: >
+    grep 'Ban' /var/log/fail2ban.log |
+    awk '$0 >= "{{ start_time }}" && $0 <= "{{ end_time }}"'
+  register: fail2ban_bans
+
+- name: Ensure the reports directory exists on the remote host
+  file:
+    path: "/home/ansible/fail2ban-cdn"
+    state: directory
+    mode: "0755"
+
+- name: Save result to a file on the remote host
+  copy:
+    content: "{{ fail2ban_bans.stdout }}\n"
+    dest: "/home/ansible/fail2ban-cdn/{{ inventory_hostname }}_{{ ansible_date_time.date }}_{{ ansible_date_time.time }}_banned_ips.txt"
+    mode: '0644'
+
+- name: Fetch the file from the remote host to the controller
+  fetch:
+    src: "/home/ansible/fail2ban-cdn/{{ inventory_hostname }}_{{ ansible_date_time.date }}_{{ ansible_date_time.time }}_banned_ips.txt"
+    dest: "./reports/fail2ban-cdn/"
+    flat: yes
+
+- name: Show each banned IP entry
+  debug:
+    msg: "{{ item }}"
+  loop: "{{ fail2ban_bans.stdout_lines }}"
+
+...
